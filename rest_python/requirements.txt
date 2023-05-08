@@ -1,0 +1,8 @@
+pymongo==4.3.3
+flask_restx==1.1.0
+ffmpeg-python==0.2.0
+gtts==2.3.1
+numpy==1.24.1
+openai==0.26.5
+whisper-openai==1.0.0
+pydub==0.25.1

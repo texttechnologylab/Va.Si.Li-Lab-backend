@@ -6,6 +6,7 @@ from common import build_pymongo_connection, api
 
 databasedb = build_pymongo_connection(f"./config_scene.json")
 scene_db = databasedb["scenarios-v2"]
+globalinfos_db = databasedb["globalInfos"]
 
 scene = api.namespace(
     "Scene Data",
@@ -302,4 +303,13 @@ class Roles(Resource):
     def get(self):
         result = serialize_cursor(scene_db.find_one(
             {"_id": ObjectId(request.args.get("id"))}))["roles"]
+        return {"result": result}
+
+# DEPRECATED: To be removed in future versions
+@scene.route("/info")
+class Info(Resource):
+    @scene.doc()
+    @scene.response(200, "Success")
+    def get(self):
+        result = serialize_cursor(globalinfos_db.find())
         return {"result": result}

@@ -23,7 +23,7 @@ longform_model = os.environ.get("LONGFORM_MODEL", "akoksal/LongForm-OPT-2.7B")
 longform_device = os.environ.get("LONGFORM_DEVICE", "cuda:0")
 longform_tokens = os.environ.get("LONGFORM_TOKENS", 1024)
 
-whisper_model = os.environ.get("WHISPER_MODEL", "small")
+whisper_model_identifier = os.environ.get("WHISPER_MODEL", "small")
 
 
 load_on_start = os.environ.get("LOAD_ON_START", True)
@@ -35,7 +35,7 @@ def load(data):
     global whisper_model
     global longform_bot
     if whisper_model is None:
-        whisper_model = Whisper2Text(whisper_model)
+        whisper_model = Whisper2Text(whisper_model_identifier)
     if longform_bot is None:
         longform_bot = LongForm(longform_model, longform_device, longform_tokens)
     print("Loaded models")

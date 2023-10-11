@@ -36,7 +36,7 @@ def handle_connect(data):
 
 @socketio.on('disconnect')
 def test_disconnect():
-    if request.id in chatbots:
+    if request.sid in chatbots:
         del chatbots[request.sid]
     print('Client disconnected')
 

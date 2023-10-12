@@ -1,0 +1,24 @@
+FROM nvidia/cuda:11.7.1-devel-ubuntu20.04
+
+EXPOSE 5000
+
+RUN apt update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt install --no-install-recommends -y build-essential software-properties-common && \
+    add-apt-repository -y ppa:deadsnakes/ppa && \
+    apt install --no-install-recommends -y python3.8 python3-pip python3-setuptools python3-distutils && \
+    apt clean && rm -rf /var/lib/apt/lists/*
+
+RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN python -m pip install --upgrade pip
+
+ADD common.py /
+ADD speech2text.py /
+ADD requirements.txt /
+
+RUN apt-get -y update && apt-get -y upgrade && apt-get install -y ffmpeg && apt-get -y install git
+RUN pip install -r requirements.txt
+
+RUN python -c "import whisper; whisper.load_model('small')"
+
+CMD [ "python", "./speech2text.py" ]

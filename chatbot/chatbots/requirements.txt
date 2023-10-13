@@ -10,3 +10,4 @@ pydub==0.25.1
 sentencepiece==0.1.98
 accelerate==0.18.0
 python-socketio[client]==5.9.0
+Werkzeug==2.2.2

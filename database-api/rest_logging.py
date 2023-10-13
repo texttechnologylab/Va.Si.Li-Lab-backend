@@ -253,47 +253,6 @@ class Special(Resource):
         return {"message": "Request must be JSON"}, 415
 
 
-# audio_payload = logger.model("AudioPayload", {
-#     "audioData": fields.Nested(audioData_model, required=True),
-# })
-
-
-# @logger.route("/audio")
-# @logger.doc(body=audio_payload)
-# class Audio(Resource):
-#     @logger.response(201, "Sucess", generic_success_response)
-#     @logger.response(415, "Error", generic_error_response)
-#     @logger.response(500, "Internal Server Error", generic_error_response)
-#     def post():
-#         if request.is_json:
-#             audio_data = request.get_json()
-#             audio_data_clone = copy.deepcopy(audio_data)
-#             audio_data_clone.pop("audioData")
-#             z = set(audio_data.keys()).intersection(required_data_audio)
-#             if len(z) == len(required_data_audio):
-#                 server_time = datetime.datetime.now()
-#                 dt_string = server_time.strftime("%d/%m/%Y %H:%M:%S")
-#
-#                 if mycol.count_documents({"roomId": audio_data["roomId"], "clientId": audio_data["clientId"],
-#                                           "messageType": audio_data["messageType"]}, limit=1):
-#                     result = mycol.find_one({"roomId": audio_data["roomId"], "clientId": audio_data["clientId"],
-#                                             "messageType": audio_data["messageType"]})
-#                     return {"status": "success", "message": str(result["_id"])}, 201
-#
-#                 else:
-#                     byte_data = bytes(
-#                         audio_data["audioData"]["base64"], 'utf-8')
-#                     id_fs = audiofs.put(byte_data, filename=f"{audio_data['clientId']}#{audio_data['roomId']}",
-#                                         contentType="base64")
-#                     audio_data_clone["id_fs"] = id_fs
-#                     audio_data_clone["server-time"] = server_time
-#                     id_insert = mycol.insert_one(audio_data_clone)
-#                 return {"status": "success", "message": str(id_insert.inserted_id)}, 201
-#             else:
-#                 return {"message": f"Request Json must content following keys for audio: {required_data_audio}"}, 415
-#         return {"message": "Request must be JSON"}, 415
-
-
 log_payload = logger.model("LogPayload", {
     "referenceMessage": fields.Integer(required=True),
     "logMessage": fields.String(required=True),

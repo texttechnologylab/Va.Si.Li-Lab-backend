@@ -4,18 +4,18 @@ from flask_restx import Api
 from pymongo import MongoClient
 import pymongo.errors
 from flask import Flask
+import os
 
-def build_pymongo_connection(access_dir: str):
-    with open(access_dir, "r", encoding="UTF-8") as json_file:
-        access_data = json.load(json_file)
-    db_name = access_data["Datenbank"]
-    user_name = access_data["User"]
-    pw = access_data["Passwort"]
-    host = f"{access_data['Server']}:{access_data['Port']}"
+def build_pymongo_connection():
+    db_name = os.environ.get("DB_NAME", "experiment")
+    user_name = os.environ.get("DB_USERNAME", "user_rw")
+    pw = os.environ.get("DB_PASSWORD", "password")
+    host_name = os.environ.get("DB_SERVER", "localhost")
+    host_port = os.environ.get("DB_PORT", "27017")
+    host = f"{host_name}:{host_port}"
     uri = "mongodb://%s:%s@%s" % (
         quote_plus(user_name), quote_plus(pw), host)
     try:
-        print(f'mongodb://{user_name}:{pw}@{host}/{db_name}')
         client = MongoClient(f'mongodb://{user_name}:{pw}@{host}/{db_name}')
         mydb = client.get_database(db_name)
     except pymongo.errors as ex:

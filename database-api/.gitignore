@@ -1,3 +1,2 @@
 __pycache__/
-config_scene.json
-config_logging.json
+.venv/

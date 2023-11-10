@@ -1,0 +1,19 @@
+version: '3'
+services:
+  api:
+    image: docker.texttechnologylab.org/vasili/chatbot-api:0.1
+    #build: .
+    environment:
+      PORT: 5000
+      DB_NAME: "experiment"
+      DB_USERNAME: "user_rw"
+      DB_PASSWORD: "password"
+      DB_SERVER: "localhost" 
+      DB_PORT: "27017"
+    ports:
+      - "5000:5000"
+    expose:
+      - "5000"
+    container_name: chatbot_host
+    networks:
+      - chatbot_net

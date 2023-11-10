@@ -4,7 +4,7 @@ from flask_restx import Resource, fields
 from pymongo.cursor import Cursor
 from common import build_pymongo_connection, api
 
-databasedb = build_pymongo_connection(f"./config_scene.json")
+databasedb = build_pymongo_connection()
 scene_db = databasedb["scenarios-v2"]
 globalinfos_db = databasedb["globalInfos"]
 

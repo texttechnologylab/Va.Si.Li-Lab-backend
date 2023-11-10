@@ -20,7 +20,7 @@ required_data_logIn = {"playerId", "roomId",
 required_data_roleIn = {"playerId", "role", "localTime", "messageId"}
 
 
-databasedb = build_pymongo_connection(f"./config_logging.json")
+databasedb = build_pymongo_connection()
 mycol = databasedb["testing"]
 db_player = databasedb["player"]
 db_object = databasedb["object"]

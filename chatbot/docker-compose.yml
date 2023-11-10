@@ -1,7 +1,7 @@
 version: '3'
 services:
   host:
-    image: vasili/chatbot-host
+    image: docker.texttechnologylab.org/vasili/chatbot-host:0.1
     #build: .
     environment:
       PORT: 5000
@@ -14,7 +14,7 @@ services:
     networks:
       - chatbot_net
   longform:
-    image: vasili/chatbot-longform
+    image: docker.texttechnologylab.org/vasili/chatbot-longform:0.1
     #build:
     #  context: ./chatbots/
     #  dockerfile: Dockerfile-longform
@@ -32,7 +32,7 @@ services:
     depends_on:
       - "host"
   alpaca:
-    image: vasili/chatbot-alpaca
+    image: docker.texttechnologylab.org/vasili/chatbot-alpaca:0.1
     #build:
     #  context: ./chatbots/
     #  dockerfile: Dockerfile-alpaca

@@ -49,4 +49,6 @@ services:
       - "host"
 networks:
   chatbot_net:
+    # Ideally part of this would be internal; the chatbots need
+    # internet access to the internet to download the newest model though
     internal: false

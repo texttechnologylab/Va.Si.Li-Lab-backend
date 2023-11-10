@@ -1,5 +1,5 @@
 flask==2.2.2
-whisper-openai==1.0.0
+openai-whisper==20231106 
 numpy==1.24.1
 pydub==0.25.1
 Werkzeug==2.2.2

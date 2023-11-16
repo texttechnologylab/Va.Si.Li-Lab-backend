@@ -97,7 +97,7 @@ def close(data):
 
 @sio.on("connect")
 def init():
-    sio.emit("init", {"name": "longform"})
+    sio.emit("init", {"name": "alpaca"})
 
 
 if __name__ == '__main__':

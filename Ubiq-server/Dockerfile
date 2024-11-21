@@ -1,4 +1,4 @@
-FROM node:14.21.2
+FROM node:22.9.0
 
 COPY . .
 
@@ -10,4 +10,4 @@ RUN useradd -u 8877 ubiq
 
 USER ubiq
 
-CMD ["node","app.js"]
+CMD ["node", "--loader", "ts-node/esm", "app.ts"]

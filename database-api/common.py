@@ -1,4 +1,4 @@
-from urllib.parse import quote_plus
+from urllib.parse import quote
 import json
 from flask_restx import Api
 from pymongo import MongoClient
@@ -13,10 +13,8 @@ def build_pymongo_connection():
     host_name = os.environ.get("DB_SERVER", "localhost")
     host_port = os.environ.get("DB_PORT", "27017")
     host = f"{host_name}:{host_port}"
-    uri = "mongodb://%s:%s@%s" % (
-        quote_plus(user_name), quote_plus(pw), host)
     try:
-        client = MongoClient(f'mongodb://{user_name}:{pw}@{host}/{db_name}')
+        client = MongoClient(f'mongodb://{quote(user_name)}:{quote(pw)}@{host}')
         mydb = client.get_database(db_name)
     except pymongo.errors as ex:
         print(ex)

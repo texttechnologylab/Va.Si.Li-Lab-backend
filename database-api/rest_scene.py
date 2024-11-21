@@ -5,7 +5,7 @@ from pymongo.cursor import Cursor
 from common import build_pymongo_connection, api
 
 databasedb = build_pymongo_connection()
-scene_db = databasedb["scenarios-v2"]
+scene_db = databasedb["scenarios"]
 globalinfos_db = databasedb["globalInfos"]
 
 scene = api.namespace(

@@ -21,7 +21,7 @@ required_data_roleIn = {"playerId", "role", "localTime", "messageId"}
 
 
 databasedb = build_pymongo_connection()
-mycol = databasedb["testing"]
+mycol = databasedb["logging"]
 db_player = databasedb["player"]
 db_object = databasedb["object"]
 db_audio = databasedb["Audio"]

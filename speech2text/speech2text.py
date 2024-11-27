@@ -12,16 +12,18 @@ whisper_model = Whisper2Text(whisper_model_identifier)
 
 @app.post("/unload")
 def unload():
-    global longform_bot
+    global whisper_model
     if whisper_model is not None:
         del whisper_model
         whisper_model = None
+    return {"result": "success"}, 200
 
 @app.post("/load")
 def load():
     global whisper_model
     if whisper_model is None:
         whisper_model = Whisper2Text(whisper_model_identifier)
+    return {"result": "success"}, 200
 
 @app.post("/whisper")
 def speech_to_text():

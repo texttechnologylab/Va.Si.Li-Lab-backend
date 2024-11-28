@@ -18,7 +18,8 @@ required_data_log = {"playerId", "localTime",
 required_data_logIn = {"playerId", "roomId",
                        "sceneName", "clientId", "localTime", "messageId"}
 required_data_roleIn = {"playerId", "role", "localTime", "messageId"}
-
+required_data_levelChange = {"playerId", "roomId", "sceneName", "localTime", "levelID", "levelStatus"}
+required_data_misc = {"playerId", "jsonData"}
 
 databasedb = build_pymongo_connection()
 mycol = databasedb["logging"]
@@ -35,6 +36,8 @@ db_logIn = databasedb["LogIn"]
 db_role = databasedb["Role"]
 db_face = databasedb["Facial"]
 db_eye = databasedb["Eye"]
+db_level = databasedb["Level"]
+db_misc = databasedb["Misc"]
 
 audioData_model = logger.model("AudioData", {
     "base64": fields.String(required=True)
@@ -92,7 +95,7 @@ class Player(Resource):
     @logger.response(201, "Sucess", generic_success_response)
     @logger.response(415, "Invalid JSON", generic_error_response)
     @logger.response(500, "Internal Server Error", generic_error_response)
-    def post():
+    def post(self):
         server_time = datetime.datetime.now()
         dt_string = server_time.strftime("%d/%m/%Y %H:%M:%S")
         if request.is_json:
@@ -211,7 +214,7 @@ class Object(Resource):
     @logger.response(201, "Sucess", generic_success_response)
     @logger.response(415, "Error", generic_error_response)
     @logger.response(500, "Internal Server Error", generic_error_response)
-    def post():
+    def post(self):
         server_time = datetime.datetime.now()
         dt_string = server_time.strftime("%d/%m/%Y %H:%M:%S")
         if request.is_json:
@@ -235,7 +238,7 @@ class Special(Resource):
     @logger.response(201, "Sucess", generic_success_response)
     @logger.response(415, "Error", generic_error_response)
     @logger.response(500, "Internal Server Error", generic_error_response)
-    def post():
+    def post(self):
         server_time = datetime.datetime.now()
         dt_string = server_time.strftime("%d/%m/%Y %H:%M:%S")
         if request.is_json:
@@ -292,7 +295,6 @@ class PlayerLogIn(Resource):
     @logger.response(500, "Internal Server Error", generic_error_response)
     def post(self):
         server_time = datetime.datetime.now()
-        dt_string = server_time.strftime("%d/%m/%Y %H:%M:%S")
         player_data = request.get_json()
         z = set(player_data.keys()).intersection(required_data_logIn)
         if request.is_json:
@@ -321,9 +323,8 @@ class PlayerRoleLogIn(Resource):
     @logger.response(201, "Sucess", generic_success_response)
     @logger.response(415, "Error", generic_error_response)
     @logger.response(500, "Internal Server Error", generic_error_response)
-    def post():
+    def post(self):
         server_time = datetime.datetime.now()
-        dt_string = server_time.strftime("%d/%m/%Y %H:%M:%S")
         player_data = request.get_json()
         z = set(player_data.keys()).intersection(required_data_roleIn)
         if request.is_json:
@@ -342,6 +343,65 @@ class PlayerRoleLogIn(Resource):
                     return {"error": f"{ex}"}, 500
             else:
                 return {"error": f"Request Json must content following keys for player LogIn: {required_data_roleIn}"}, 415
+        return {"error": "Request must be JSON"}, 415
+
+@logger.route("/levelChange")
+class LevelChange(Resource):
+    @logger.response(201, "Sucess", generic_success_response)
+    @logger.response(415, "Error", generic_error_response)
+    @logger.response(500, "Internal Server Error", generic_error_response)
+    def post(self):
+        server_time = datetime.datetime.now()
+        dt_string = server_time.strftime("%d/%m/%Y %H:%M:%S")
+        level_data = request.get_json()
+        z = set(level_data.keys()).intersection(required_data_levelChange)
+        if request.is_json:
+            if len(z) == len(required_data_levelChange):
+                try:
+                    level_input = {
+                            "playerId": level_data["playerId"],
+                            "roomId": level_data["roomId"],
+                            "sceneName": level_data["sceneName"],
+                            "localTime": level_data["localTime"],
+                            "serverTime": server_time,
+                            "server-timestamp": dt_string,
+                            "levelID": level_data["levelID"],
+                            "levelStatus": level_data["levelStatus"]
+                    }
+                    db_level.insert_one(level_input)
+                    return {"status": "success"}, 201
+                except Exception as ex:
+                    return {"error": f"{ex}"}, 500
+            else:
+                return {"error": f"Request Json must content following keys for level change: {required_data_levelChange}"}, 415
+        return {"error": "Request must be JSON"}, 415
+
+@logger.route("/logMisc")
+class LogMisc(Resource):
+    @logger.response(201, "Sucess", generic_success_response)
+    @logger.response(415, "Error", generic_error_response)
+    @logger.response(500, "Internal Server Error", generic_error_response)
+    def post(self):
+        server_time = datetime.datetime.now()
+        dt_string = server_time.strftime("%d/%m/%Y %H:%M:%S")
+        misc_data = request.get_json()
+        z = set(misc_data.keys()).intersection(required_data_misc)
+        if request.is_json:
+            if len(z) == len(required_data_misc):
+                try:
+                    misc_input = {
+                            "playerId": misc_data["playerId"],
+                            "localTime": misc_data["localTime"],
+                            "serverTime": server_time,
+                            "server-timestamp": dt_string,
+                            "data": misc_data["jsonData"],
+                    }
+                    db_misc.insert_one(misc_input)
+                    return {"status": "success"}, 201
+                except Exception as ex:
+                    return {"error": f"{ex}"}, 500
+            else:
+                return {"error": f"Request Json must content following keys for misc log: {required_data_misc}"}, 415
         return {"error": "Request must be JSON"}, 415
 
 

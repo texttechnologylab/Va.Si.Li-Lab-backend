@@ -8,6 +8,4 @@ ADD requirements.txt /
 
 RUN pip install -r requirements.txt
 
-RUN python -c "import whisper; whisper.load_model('small')"
-
 CMD [ "python", "./speech2text.py" ]

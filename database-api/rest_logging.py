@@ -10,34 +10,51 @@ required_data_audio = {"roomId", "messageType", "clientId", "timestamp", "positi
                        "audioData", "peers"}
 required_data_player = {"playerId", "audioData",
                         "localTime", "messageId", "body", "leftHand", "rightHand"}
-required_data_object = {"playerId", "referenceMessage",
+required_data_object = {"playerId", "messageId",
                         "localTime", "objectId", "objectName", "hand", "interaction"}
 required_data_special = {"localTime", "mode"}
 required_data_log = {"playerId", "localTime",
-                     "referenceMessage", "logMessage", "logType", "stacktrace"}
+                     "messageId", "logMessage", "logType", "stacktrace"}
 required_data_logIn = {"playerId", "roomId",
                        "sceneName", "clientId", "localTime", "messageId"}
 required_data_roleIn = {"playerId", "role", "localTime", "messageId"}
 required_data_levelChange = {"playerId", "roomId", "sceneName", "localTime", "levelID", "levelStatus"}
 required_data_misc = {"playerId", "jsonData"}
 
-databasedb = build_pymongo_connection()
+databasedb = build_pymongo_connection() 
 mycol = databasedb["logging"]
-db_player = databasedb["player"]
+#db_player = databasedb["player"]
 db_object = databasedb["object"]
 db_audio = databasedb["Audio"]
 db_body = databasedb["Body"]
 db_hand = databasedb["Hand"]
+db_finger = databasedb["Finger"]
 db_head = databasedb["Head"]
 db_log = databasedb["Log"]
-db_special = databasedb["special"]
-db_log = databasedb["log"]
+db_special = databasedb["Special"]
 db_logIn = databasedb["LogIn"]
-db_role = databasedb["Role"]
 db_face = databasedb["Facial"]
 db_eye = databasedb["Eye"]
+db_role = databasedb["Role"]
 db_level = databasedb["Level"]
 db_misc = databasedb["Misc"]
+
+
+#db_player.create_indexes([("playerId", 1), ("messageId", 1), ("roomId", 1), ("sceneId", 1)])
+db_object.create_indexes([("playerId", 1), ("messageId", 1), ("interaction", 1), ("hand", 1)])
+db_audio.create_indexes([("playerId", 1), ("messageId", 1)])
+db_body.create_indexes([("playerId", 1), ("messageId", 1), ("counter", 1), ("position", 1), ("rotation", 1)])
+db_hand.create_indexes([("playerId", 1), ("messageId", 1), ("counter", 1), ("identifier", 1), ("position", 1), ("rotation", 1)])
+db_finger.create_indexes([("playerId", 1), ("messageId", 1), ("counter", 1), ("identifier", 1), ("rootPose", 1), ("pointerPose", 1)])
+db_head.create_indexes([("playerId", 1), ("messageId", 1), ("counter", 1), ("position", 1), ("rotation", 1)])
+db_log.create_indexes([("playerId", 1), ("messageId", 1), ("roomId", 1), ("sceneName", 1)])
+db_special.create_indexes([("messageId", 1), ("roomId", 1)])
+db_logIn.create_indexes([("playerId", 1), ("messageId", 1), ("roomId", 1), ("sceneName", 1)])
+db_face.create_indexes([("playerId", 1), ("messageId", 1), ("expressionWeights", 1), ("expressionWeightConfidences", 1)])
+db_eye.create_indexes([("playerId", 1), ("messageId", 1), ("position", 1), ("orientation", 1)])
+db_role.create_indexes([("playerId", 1), ("messageId", 1)])
+db_level.create_indexes([("playerId", 1), ("messageId", 1), ("roomId", 1), ("sceneName", 1), ("levelID", 1), ("levelStatus", 1)])
+db_misc.create_indexes([("playerId", 1), ("messageId", 1)])
 
 audioData_model = logger.model("AudioData", {
     "base64": fields.String(required=True)
@@ -116,6 +133,8 @@ class Player(Resource):
                     body_infos = []
                     left_hand_infos = []
                     right_hand_infos = []
+                    left_hand_finger_infos = []
+                    right_hand_finger_infos = []
                     head_infos = []
                     eye_infos = []
                     face_infos = []
@@ -160,6 +179,48 @@ class Player(Resource):
                         })
                         if "metaMessage" not in player_data:
                             continue
+
+                        left_hand_finger_infos.append({
+                            "playerId": player_data["playerId"],
+                            "identifier": "left",
+                            "status": player_data["metaMessage"]["leftHandStates"][c]["Status"],
+                            "rootPose": player_data["metaMessage"]["leftHandStates"][c]["RootPose"],
+                            "boneRotations": player_data["metaMessage"]["leftHandStates"][c]["BoneRotations"],
+                            "pinches": player_data["metaMessage"]["leftHandStates"][c]["Pinches"],
+                            "pinchStrength": player_data["metaMessage"]["leftHandStates"][c]["PinchStrength"],
+                            "pointerPose": player_data["metaMessage"]["leftHandStates"][c]["PointerPose"],
+                            "handScale": player_data["metaMessage"]["leftHandStates"][c]["HandScale"],
+                            "handConfidence": player_data["metaMessage"]["leftHandStates"][c]["HandConfidence"],
+                            "fingerConfidences": player_data["metaMessage"]["leftHandStates"][c]["FingerConfidences"],
+                            "requestedTimeStamp": player_data["metaMessage"]["leftHandStates"][c][
+                                "RequestedTimeStamp"],
+                            "sampleTimeStamp": player_data["metaMessage"]["leftHandStates"][c]["SampleTimeStamp"],
+                            "messageId": player_data["messageId"],
+                            "localTime": player_data["localTime"],
+                            "counter": player_data["count"][c],
+                            "serverTime": server_time
+                        })
+                        right_hand_finger_infos.append({
+                            "playerId": player_data["playerId"],
+                            "identifier": "right",
+                            "status": player_data["metaMessage"]["rightHandStates"][c]["Status"],
+                            "rootPose": player_data["metaMessage"]["rightHandStates"][c]["RootPose"],
+                            "boneRotations": player_data["metaMessage"]["rightHandStates"][c]["BoneRotations"],
+                            "pinches": player_data["metaMessage"]["rightHandStates"][c]["Pinches"],
+                            "pinchStrength": player_data["metaMessage"]["rightHandStates"][c]["PinchStrength"],
+                            "pointerPose": player_data["metaMessage"]["rightHandStates"][c]["PointerPose"],
+                            "handScale": player_data["metaMessage"]["rightHandStates"][c]["HandScale"],
+                            "handConfidence": player_data["metaMessage"]["rightHandStates"][c]["HandConfidence"],
+                            "fingerConfidences": player_data["metaMessage"]["rightHandStates"][c][
+                                "FingerConfidences"],
+                            "requestedTimeStamp": player_data["metaMessage"]["rightHandStates"][c][
+                                "RequestedTimeStamp"],
+                            "sampleTimeStamp": player_data["metaMessage"]["rightHandStates"][c]["SampleTimeStamp"],
+                            "messageId": player_data["messageId"],
+                            "localTime": player_data["localTime"],
+                            "counter": player_data["count"][c],
+                            "serverTime": server_time
+                        })
                         face_infos.append({
                             "playerId": player_data["playerId"],
                             "expressionWeights": player_data["metaMessage"]["faceStates"][c]["ExpressionWeights"],
@@ -189,6 +250,8 @@ class Player(Resource):
                     db_head.insert_many(head_infos)
                     db_face.insert_many(face_infos)
                     db_eye.insert_many(eye_infos)
+                    db_finger.insert_many(left_hand_finger_infos)
+                    db_finger.insert_many(right_hand_finger_infos)
                     return {"status": "success", "message": "success"}, 201
                 except Exception as ex:
                     return {"message": f"{ex}"}, 500
@@ -199,7 +262,7 @@ class Player(Resource):
 
 object_payload = logger.model("ObjectPayload", {
     "playerId": fields.String(required=True),
-    "referenceMessage": fields.Integer(required=True),
+    "messageId": fields.Integer(required=True),
     "localTime": fields.String(required=True),
     "objectId": fields.String(required=True),
     "objectName": fields.String(required=True),
@@ -257,7 +320,7 @@ class Special(Resource):
 
 
 log_payload = logger.model("LogPayload", {
-    "referenceMessage": fields.Integer(required=True),
+    "messageId": fields.Integer(required=True),
     "logMessage": fields.String(required=True),
     "logType": fields.String(required=True),
     "stacktrace": fields.String(required=True)
@@ -361,6 +424,7 @@ class LevelChange(Resource):
                     level_input = {
                             "playerId": level_data["playerId"],
                             "roomId": level_data["roomId"],
+                            "messageId": level_data["messageId"],
                             "sceneName": level_data["sceneName"],
                             "localTime": level_data["localTime"],
                             "serverTime": server_time,

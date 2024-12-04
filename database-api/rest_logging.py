@@ -1,3 +1,4 @@
+from pymongo import IndexModel
 from common import build_pymongo_connection, api
 from flask import request
 from flask_restx import Resource, fields
@@ -40,21 +41,75 @@ db_level = databasedb["Level"]
 db_misc = databasedb["Misc"]
 
 
-#db_player.create_indexes([("playerId", 1), ("messageId", 1), ("roomId", 1), ("sceneId", 1)])
-db_object.create_indexes([("playerId", 1), ("messageId", 1), ("interaction", 1), ("hand", 1)])
-db_audio.create_indexes([("playerId", 1), ("messageId", 1)])
-db_body.create_indexes([("playerId", 1), ("messageId", 1), ("counter", 1), ("position", 1), ("rotation", 1)])
-db_hand.create_indexes([("playerId", 1), ("messageId", 1), ("counter", 1), ("identifier", 1), ("position", 1), ("rotation", 1)])
-db_finger.create_indexes([("playerId", 1), ("messageId", 1), ("counter", 1), ("identifier", 1), ("rootPose", 1), ("pointerPose", 1)])
-db_head.create_indexes([("playerId", 1), ("messageId", 1), ("counter", 1), ("position", 1), ("rotation", 1)])
-db_log.create_indexes([("playerId", 1), ("messageId", 1), ("roomId", 1), ("sceneName", 1)])
-db_special.create_indexes([("messageId", 1), ("roomId", 1)])
-db_logIn.create_indexes([("playerId", 1), ("messageId", 1), ("roomId", 1), ("sceneName", 1)])
-db_face.create_indexes([("playerId", 1), ("messageId", 1), ("expressionWeights", 1), ("expressionWeightConfidences", 1)])
-db_eye.create_indexes([("playerId", 1), ("messageId", 1), ("position", 1), ("orientation", 1)])
-db_role.create_indexes([("playerId", 1), ("messageId", 1)])
-db_level.create_indexes([("playerId", 1), ("messageId", 1), ("roomId", 1), ("sceneName", 1), ("levelID", 1), ("levelStatus", 1)])
-db_misc.create_indexes([("playerId", 1), ("messageId", 1)])
+db_object.create_index([("playerId", 1)], name="object_index_playerId")
+db_object.create_index([("messageId", 1)], name="object_index_messageId")
+db_object.create_index([("interaction", 1)], name="object_index_interaction")
+db_object.create_index([("hand", 1)], name="object_index_hand")
+
+db_audio.create_index([("playerId", 1)], name="audio_index_playerId")
+db_audio.create_index([("messageId", 1)], name="audio_index_messageId")
+
+db_body.create_index([("playerId", 1)], name="body_index_playerId")
+db_body.create_index([("messageId", 1)], name="body_index_messageId")
+db_body.create_index([("counter", 1)], name="body_index_counter")
+db_body.create_index([("position", 1)], name="body_index_position")
+db_body.create_index([("rotation", 1)], name="body_index_rotation")
+
+db_hand.create_index([("playerId", 1)], name="hand_index_playerId")
+db_hand.create_index([("messageId", 1)], name="hand_index_messageId")
+db_hand.create_index([("counter", 1)], name="hand_index_counter")
+db_hand.create_index([("identifier", 1)], name="hand_index_identifier")
+db_hand.create_index([("position", 1)], name="hand_index_position")
+db_hand.create_index([("rotation", 1)], name="hand_index_rotation")
+
+db_finger.create_index([("playerId", 1)], name="finger_index_playerId")
+db_finger.create_index([("messageId", 1)], name="finger_index_messageId")
+db_finger.create_index([("counter", 1)], name="finger_index_counter")
+db_finger.create_index([("identifier", 1)], name="finger_index_identifier")
+db_finger.create_index([("rootPose", 1)], name="finger_index_rootPose")
+db_finger.create_index([("pointerPose", 1)], name="finger_index_pointerPose")
+
+db_head.create_index([("playerId", 1)], name="head_index_playerId")
+db_head.create_index([("messageId", 1)], name="head_index_messageId")
+db_head.create_index([("counter", 1)], name="head_index_counter")
+db_head.create_index([("position", 1)], name="head_index_position")
+db_head.create_index([("rotation", 1)], name="head_index_rotation")
+
+db_log.create_index([("playerId", 1)], name="log_index_playerId")
+db_log.create_index([("messageId", 1)], name="log_index_messageId")
+db_log.create_index([("roomId", 1)], name="log_index_roomId")
+db_log.create_index([("sceneName", 1)], name="log_index_sceneName")
+
+db_special.create_index([("messageId", 1)], name="special_index_messageId")
+db_special.create_index([("roomId", 1)], name="special_index_roomId")
+
+db_logIn.create_index([("playerId", 1)], name="login_index_playerId")
+db_logIn.create_index([("messageId", 1)], name="login_index_messageId")
+db_logIn.create_index([("roomId", 1)], name="login_index_roomId")
+db_logIn.create_index([("sceneName", 1)], name="login_index_sceneName")
+
+db_face.create_index([("playerId", 1)], name="face_index_playerId")
+db_face.create_index([("messageId", 1)], name="face_index_messageId")
+db_face.create_index([("expressionWeights", 1)], name="face_index_expressionWeights")
+db_face.create_index([("expressionWeightConfidences", 1)], name="face_index_expressionWeightConfidences")
+
+db_eye.create_index([("playerId", 1)], name="eye_index_playerId")
+db_eye.create_index([("messageId", 1)], name="eye_index_messageId")
+db_eye.create_index([("position", 1)], name="eye_index_position")
+db_eye.create_index([("orientation", 1)], name="eye_index_orientation")
+
+db_role.create_index([("playerId", 1)], name="role_index_playerId")
+db_role.create_index([("messageId", 1)], name="role_index_messageId")
+
+db_level.create_index([("playerId", 1)], name="level_index_playerId")
+db_level.create_index([("messageId", 1)], name="level_index_messageId")
+db_level.create_index([("roomId", 1)], name="level_index_roomId")
+db_level.create_index([("sceneName", 1)], name="level_index_sceneName")
+db_level.create_index([("levelID", 1)], name="level_index_levelID")
+db_level.create_index([("levelStatus", 1)], name="level_index_levelStatus")
+
+db_misc.create_index([("playerId", 1)], name="misc_index_playerId")
+db_misc.create_index([("messageId", 1)], name="misc_index_messageId")
 
 audioData_model = logger.model("AudioData", {
     "base64": fields.String(required=True)
@@ -109,6 +164,7 @@ player_payload = logger.model("PlayerPayload", {
 @logger.route("/player")
 @logger.doc(body=player_payload)
 class Player(Resource):
+    @logger.doc(security=None)
     @logger.response(201, "Sucess", generic_success_response)
     @logger.response(415, "Invalid JSON", generic_error_response)
     @logger.response(500, "Internal Server Error", generic_error_response)
@@ -274,6 +330,7 @@ object_payload = logger.model("ObjectPayload", {
 @logger.route("/object")
 @logger.doc(body=object_payload)
 class Object(Resource):
+    @logger.doc(security=None)
     @logger.response(201, "Sucess", generic_success_response)
     @logger.response(415, "Error", generic_error_response)
     @logger.response(500, "Internal Server Error", generic_error_response)
@@ -298,6 +355,7 @@ class Object(Resource):
 @logger.route("/special")
 @logger.doc(params={"body": {"in": "body", "description": "Payload data as json", "required": True}})
 class Special(Resource):
+    @logger.doc(security=None)
     @logger.response(201, "Sucess", generic_success_response)
     @logger.response(415, "Error", generic_error_response)
     @logger.response(500, "Internal Server Error", generic_error_response)
@@ -330,6 +388,7 @@ log_payload = logger.model("LogPayload", {
 @logger.route("/log")
 @logger.doc(body=log_payload)
 class Log(Resource):
+    @logger.doc(security=None)
     @logger.response(201, "Sucess", generic_success_response)
     @logger.response(415, "Error", generic_error_response)
     @logger.response(500, "Internal Server Error", generic_error_response)
@@ -353,6 +412,7 @@ class Log(Resource):
 
 @logger.route("/playerLogIn")
 class PlayerLogIn(Resource):
+    @logger.doc(security=None)
     @logger.response(201, "Sucess", generic_success_response)
     @logger.response(415, "Error", generic_error_response)
     @logger.response(500, "Internal Server Error", generic_error_response)
@@ -383,6 +443,7 @@ class PlayerLogIn(Resource):
 
 @logger.route("/playerRoleLogIn")
 class PlayerRoleLogIn(Resource):
+    @logger.doc(security=None)
     @logger.response(201, "Sucess", generic_success_response)
     @logger.response(415, "Error", generic_error_response)
     @logger.response(500, "Internal Server Error", generic_error_response)
@@ -410,6 +471,7 @@ class PlayerRoleLogIn(Resource):
 
 @logger.route("/levelChange")
 class LevelChange(Resource):
+    @logger.doc(security=None)
     @logger.response(201, "Sucess", generic_success_response)
     @logger.response(415, "Error", generic_error_response)
     @logger.response(500, "Internal Server Error", generic_error_response)
@@ -442,6 +504,7 @@ class LevelChange(Resource):
 
 @logger.route("/logMisc")
 class LogMisc(Resource):
+    @logger.doc(security=None)
     @logger.response(201, "Sucess", generic_success_response)
     @logger.response(415, "Error", generic_error_response)
     @logger.response(500, "Internal Server Error", generic_error_response)
@@ -471,5 +534,6 @@ class LogMisc(Resource):
 
 @logger.route("/status")
 class Status(Resource):
+    @logger.doc(security=None)
     def get(self):
         return {"status": "online"}, 200

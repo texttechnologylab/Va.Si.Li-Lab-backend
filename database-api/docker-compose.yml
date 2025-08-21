@@ -1,6 +1,6 @@
 services:
   api:
-    image: docker.texttechnologylab.org/vasili/database-api:0.2
+    image: docker.texttechnologylab.org/vasili/database-api:0.3
     #build: .
     env_file:
       - .env

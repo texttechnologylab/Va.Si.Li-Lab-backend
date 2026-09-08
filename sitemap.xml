@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://texttechnologylab.github.io/Va.Si.Li-Lab-backend/</loc>
+         <lastmod>2026-09-08</lastmod>
+    </url>
+    <url>
+         <loc>https://texttechnologylab.github.io/Va.Si.Li-Lab-backend/data_model/</loc>
+         <lastmod>2026-09-08</lastmod>
+    </url>
+    <url>
+         <loc>https://texttechnologylab.github.io/Va.Si.Li-Lab-backend/database_api/</loc>
+         <lastmod>2026-09-08</lastmod>
+    </url>
+    <url>
+         <loc>https://texttechnologylab.github.io/Va.Si.Li-Lab-backend/deployment/</loc>
+         <lastmod>2026-09-08</lastmod>
+    </url>
+    <url>
+         <loc>https://texttechnologylab.github.io/Va.Si.Li-Lab-backend/ubiq_server/</loc>
+         <lastmod>2026-09-08</lastmod>
+    </url>
+    <url>
+         <loc>https://texttechnologylab.github.io/Va.Si.Li-Lab-backend/services/chatbot/</loc>
+         <lastmod>2026-09-08</lastmod>
+    </url>
+    <url>
+         <loc>https://texttechnologylab.github.io/Va.Si.Li-Lab-backend/services/speech/</loc>
+         <lastmod>2026-09-08</lastmod>
+    </url>
+</urlset>

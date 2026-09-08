@@ -1,4 +1,4 @@
-FROM node:22.9.0
+FROM node:25.1.0
 
 COPY . .
 

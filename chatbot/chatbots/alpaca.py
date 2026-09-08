@@ -22,7 +22,7 @@ port = os.environ.get("PORT", 5001)
 
 alpaca_model = os.environ.get("ALPACA_MODEL", "declare-lab/flan-alpaca-base")
 
-whisper_model = os.environ.get("WHISPER_MODEL", "small")
+whisper_model_identifier = os.environ.get("WHISPER_MODEL", "small")
 
 
 load_on_start = os.environ.get("LOAD_ON_START", True)
@@ -34,7 +34,7 @@ def load(data):
     global whisper_model
     global alpaca_bot
     if whisper_model is None:
-        whisper_model = Whisper2Text(whisper_model)
+        whisper_model = Whisper2Text(whisper_model_identifier)
     if alpaca_bot is None:
         alpaca_bot = AlpacaBot(alpaca_model)
     print("Loaded models")

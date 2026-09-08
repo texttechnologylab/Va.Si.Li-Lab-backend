@@ -32,7 +32,7 @@ services:
     depends_on:
       - "host"
   alpaca:
-    image: docker.texttechnologylab.org/vasili/chatbot-alpaca:0.1
+    image: docker.texttechnologylab.org/vasili/chatbot-alpaca:0.2
     #build:
     #  context: ./chatbots/
     #  dockerfile: Dockerfile-alpaca

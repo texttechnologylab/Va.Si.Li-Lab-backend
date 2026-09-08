@@ -1,0 +1,86 @@
+site_name: Va.Si.Li-Lab Backend Docs
+site_url: https://texttechnologylab.github.io/Va.Si.Li-Lab-backend/
+site_description: >-
+  Documentation for the Va.Si.Li-Lab backend modules
+
+repo_url: https://github.com/texttechnologylab/Va.Si.Li-Lab-backend
+repo_name: texttechnologylab/Va.Si.Li-Lab-backend
+
+nav:
+  - Home: index.md
+  - Database API: database_api.md
+  - Data Model: data_model.md
+  - Ubiq Server: ubiq_server.md
+  - Optional Services:
+      - Chatbot: ./services/chatbot.md
+      - Speech: ./services/speech.md
+  - Deployment: deployment.md
+
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to system preference
+  features:
+    - content.code.copy
+    - navigation.instant
+    - navigation.tabs
+    - navigation.expand
+    - navigation.tracking
+    - navigation.path
+    - search.highlight
+    - search.suggest
+
+extra:
+  homepage: https://texttechnologylab.github.io/Va.Si.Li-Lab-backend/
+  social:
+    - icon: fontawesome/solid/house
+      link: https://www.texttechnologylab.org/
+    - icon: fontawesome/brands/github
+      link: https://github.com/texttechnologylab
+
+plugins:
+  - search
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - attr_list
+  - md_in_html
+  - def_list
+  - tables
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg

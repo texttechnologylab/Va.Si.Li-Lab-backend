@@ -2,10 +2,9 @@
 
 Optional. Speech-to-text based on OpenAI Whisper.
 
-!!! note "A newer speech service exists upstream"
-    The backend's `main` branch also has a `tts-stt/` module (WhisperX-based STT
-    plus TTS in one service) that is not yet present in this checkout. If you
-    pull it in, document it alongside this page as a second option.
+!!! note "Speech for the VR agents"
+    The VR agents use [TTS/STT](tts_stt.md) instead, which adds text-to-speech.
+    This service serves the client's `MicrophoneListener`.
 
 GPU-accelerated when a GPU is available; falls back to CPU, where transcription
 is substantially slower.

@@ -22,12 +22,13 @@ All configuration is by environment variable.
 | `DB_NAME` | `experiment` | Database name |
 | `DB_USERNAME` | `user_rw` | MongoDB user |
 | `DB_PASSWORD` | `password` | MongoDB password |
-| `X_API_KEY` | *(empty)* | Shared secret required by every endpoint |
+| `X_API_KEY` | *(empty)* | Shared secret for writing scene definitions |
 
 !!! danger "The defaults are not safe to deploy"
     `X_API_KEY` defaults to the **empty string**. Since authentication compares
     the request header against that value, leaving it unset means a request that
-    sends no key at all - or an empty one - is accepted. Always set it explicitly.
+    sends no key at all - or an empty one - can create and change scenes. Always
+    set it explicitly.
 
     The database credentials also have committed defaults (`user_rw` /
     `password`) which are visible in the source. Override every one of them per
@@ -36,22 +37,23 @@ All configuration is by environment variable.
 
 ## Authentication
 
-Every endpoint expects a shared secret in a header:
+Writes to the [scene endpoints](#scene-endpoints) (`POST` and `PATCH`) expect the
+shared secret in a header:
 
 ```
 X-API-KEY: <value of X_API_KEY>
 ```
 
-A mismatch returns `401 Unauthorized`.
+A mismatch returns `401 Unauthorized`. The logging endpoints and all reads are not
+authenticated: the Unity client sends no key.
 
-!!! warning "Authentication failures are invisible to the client"
-    Clients do not stop an experiment when logging fails. A wrong key produces a
-    session that runs perfectly and records **nothing**. Verify that data is
-    arriving before a participant sits down, not after.
+!!! warning "Logging failures are invisible to the client"
+    Clients do not stop an experiment when logging fails. A wrong API address
+    produces a session that runs perfectly and records **nothing**. Verify that
+    data is arriving before a participant sits down, not after.
 
     ```bash
-    curl -s -o /dev/null -w "%{http_code}\n" \
-         -H "X-API-KEY: $X_API_KEY" http://localhost:5000/logging/status
+    curl -s -o /dev/null -w "%{http_code}\n" http://localhost:5000/logging/status
     ```
 
 ## Logging endpoints
@@ -134,9 +136,9 @@ All writes (`POST`/`PATCH`) require the `X-API-KEY` header; reads on `/scene`,
 ### Creating a scene
 
 Scenes can be built up entirely through this API - no direct MongoDB access is
-needed. This is the same structure the Unity client and the manual
-`scenarios-languages` collection entries have always used; the API just gives
-you a safe way to write it instead of hand-editing MongoDB. See
+needed. Scenes are stored in the `scenarios` collection, in the structure the
+Unity client reads (`ApiScene`); the API just gives you a safe way to write it
+instead of hand-editing MongoDB. See
 [Adding Scenes](https://texttechnologylab.github.io/Va.Si.Li-Lab/getting_started/adding_scenes/)
 for the concept and the full field reference.
 
@@ -145,14 +147,18 @@ scenario's stages). Each role and level gets **locales** - per-language strings
 shown to the player. Build it in that order, since each step below references
 the scene's `_id` from the first response.
 
+The example creates a definition for the `InterView` sample scene of
+Va.Si.Li-Lab: an interviewee in VR, who starts and ends the level. `internalName`
+is the name of the Unity scene, `spawnPosition` the name of a GameObject in it.
+
 **1. Create the scene.**
 
 ```bash
 curl -X POST "$API/scene" -H "X-API-KEY: $KEY" -H "Content-Type: application/json" -d '{
-    "name": "Praktikum Experiment 3",
-    "shortName": "Praktikum 3",
+    "name": "InterView Sample",
+    "shortName": "InterView",
     "author": "Jane Doe",
-    "internalName": "PraktikumScenario03",
+    "internalName": "InterView",
     "enabled": true
 }'
 # -> {"status": "success", "message": "<scene id>"}
@@ -164,9 +170,9 @@ role (used to reference it in later calls, and in `roleDescriptions` below) - it
 is a query parameter, not part of the body.
 
 ```bash
-curl -X POST "$API/role?id=$ID&identifier=guide" -H "X-API-KEY: $KEY" -H "Content-Type: application/json" -d '{
+curl -X POST "$API/role?id=$ID&identifier=interviewee" -H "X-API-KEY: $KEY" -H "Content-Type: application/json" -d '{
     "mode": "player",
-    "spawnPosition": "P1",
+    "spawnPosition": "DefaultSpawn",
     "maxCount": 1,
     "admin": true,
     "restrictions": []
@@ -191,9 +197,9 @@ curl -X POST "$API/level?id=$ID" -H "X-API-KEY: $KEY" -H "Content-Type: applicat
 **4. Add locales.** A role's display name and description:
 
 ```bash
-curl -X POST "$API/role/locales?id=$ID&identifier=guide&locale=EN" -H "X-API-KEY: $KEY" -H "Content-Type: application/json" -d '{
-    "name": "Guide",
-    "description": ["Leads the tour and answers questions."]
+curl -X POST "$API/role/locales?id=$ID&identifier=interviewee&locale=EN" -H "X-API-KEY: $KEY" -H "Content-Type: application/json" -d '{
+    "name": "Interviewee",
+    "description": ["Answer the interviewer'\''s questions."]
 }'
 ```
 
@@ -201,8 +207,8 @@ And a level's per-role description (`level_index` is the position from step 3,
 `role` is the role identifier from step 2):
 
 ```bash
-curl -X POST "$API/level/locales?id=$ID&level_index=0&role=guide&locale=EN" -H "X-API-KEY: $KEY" -H "Content-Type: application/json" -d '{
-    "description": ["Explain the tour route."]
+curl -X POST "$API/level/locales?id=$ID&level_index=0&role=interviewee&locale=EN" -H "X-API-KEY: $KEY" -H "Content-Type: application/json" -d '{
+    "description": ["Interview"]
 }'
 ```
 
@@ -252,6 +258,8 @@ directory.
 
 ## Unity client
 
-Point the Va.Si.Li API asset `host` at this service and set the same
-`X_API_KEY`. See the
-[Va.Si.Li-Lab documentation](https://texttechnologylab.github.io/Va.Si.Li-Lab/).
+Set `api` in the client's endpoints configuration (`VasiliEndpoints`, created via
+*Tools > Va.Si.Li > Create Endpoints Config*) to this service's URL. The client
+needs no API key. See
+[Endpoints Configuration](https://texttechnologylab.github.io/Va.Si.Li-Lab/modules/endpoints/)
+in the Va.Si.Li-Lab documentation.

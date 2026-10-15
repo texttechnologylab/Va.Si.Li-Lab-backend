@@ -30,13 +30,17 @@ support particular scenarios.
 
     Speech-to-text based on Whisper.
 
-</div>
+-   :material-account-voice: **[VR Agent](services/vr_agent.md)** - *optional*
 
-!!! note "Not every backend module is in this checkout"
-    The `main` branch of this repository also has a `vr-agent/` module
-    (LLM-backed conversational agents) and a `tts-stt/` module (WhisperX STT +
-    TTS). Neither is present here yet - pull them in and extend this site when
-    you do.
+    LLM-backed conversational agents that answer users and call tools in the
+    VR scene.
+
+-   :material-waveform: **[TTS/STT](services/tts_stt.md)** - *optional*
+
+    WhisperX speech-to-text and text-to-speech in one service, used by the VR
+    agents.
+
+</div>
 
 ## Which services do I need?
 
@@ -46,6 +50,7 @@ support particular scenarios.
 | Recording an experiment | Database API, Ubiq | - |
 | Scenarios with a chatbot | Database API, Ubiq | Chatbot |
 | Voice-driven interaction | Database API, Ubiq | Speech |
+| Talking to LLM agents | Database API, Ubiq | VR Agent, TTS/STT |
 
 !!! info "InterView deploys a subset of these"
     The [InterView](https://texttechnologylab.github.io/InterView/) platform runs
@@ -62,6 +67,8 @@ support particular scenarios.
 | `Ubiq-server/` | [Ubiq Server](ubiq_server.md) |
 | `chatbot/` | [Chatbot host and clients](services/chatbot.md) |
 | `speech2text/` | [Whisper speech-to-text](services/speech.md#speech2text) |
+| `vr-agent/` | [VR Agent](services/vr_agent.md) |
+| `tts-stt/` | [TTS/STT](services/tts_stt.md) |
 | `docker-images/` | Shared base images - see [Deployment](deployment.md#base-images) |
 
 ## Related documentation

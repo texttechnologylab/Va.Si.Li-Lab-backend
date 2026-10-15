@@ -85,9 +85,11 @@ The container runs as an unprivileged user (`uid 8877`).
 
 ## Unity client
 
-Set the connection definition in `SocialNetworkScene > RoomClient` to this
-server's host and TCP port. See the
-[Va.Si.Li-Lab documentation](https://texttechnologylab.github.io/Va.Si.Li-Lab/).
+Create a Ubiq connection definition with this server's host and TCP port and set
+it as `ubiqServer` in the client's endpoints configuration (`VasiliEndpoints`).
+Without one, the client connects to `127.0.0.1:8009`. See
+[Ubiq Server](https://texttechnologylab.github.io/Va.Si.Li-Lab/server/ubiq_server/)
+in the Va.Si.Li-Lab documentation.
 
 ## Citation
 

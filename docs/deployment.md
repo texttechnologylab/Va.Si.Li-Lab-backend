@@ -48,14 +48,14 @@ No module reads a secrets file; all take credentials from the environment.
 
 | Secret | Used by |
 |---|---|
-| `X_API_KEY` | [Database API](database_api.md), and every client that logs to it |
+| `X_API_KEY` | [Database API](database_api.md): writing scene definitions (logging needs no key) |
 | `DB_PASSWORD` | Database API |
 | `SOCKET_SECRET` | [Chatbot](services/chatbot.md) |
 | TURN credentials | [Ubiq](ubiq_server.md) - in `config/local.json` |
 
 !!! danger "Two committed defaults must be overridden"
-    `X_API_KEY` defaults to the **empty string**, which accepts unauthenticated
-    requests. `SOCKET_SECRET` has a committed default value. Set both explicitly
+    `X_API_KEY` defaults to the **empty string**, which lets anyone create and
+    change scene definitions. `SOCKET_SECRET` has a committed default value. Set both explicitly
     in any deployment that is reachable by anything other than localhost.
 
 ## Ports
@@ -69,3 +69,5 @@ without remapping.
 | [Ubiq](ubiq_server.md) | 8009 / 8010 / 8011 |
 | [Chatbot](services/chatbot.md) | 5000 (`PORT`) |
 | [speech2text](services/speech.md#speech2text) | 5000 |
+| [VR Agent](services/vr_agent.md) | 8000 |
+| [TTS/STT](services/tts_stt.md) | 5012 |
